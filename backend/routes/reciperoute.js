@@ -31,6 +31,40 @@ router.get('/',userAuth,async(req,res)=>{
     }catch(err){
         return res.json({message: err.message});
     }
+});
+
+router.put('/:recipeId',userAuth,async(req,res)=>{
+  try{
+    const id = req.params.recipeId;
+    const user = await User.findById(req.user.id);
+    if(user.recipes.includes(id)){
+      const recipeToBeUpdated = await Recipe.findByIdAndUpdate(id, req.body, { new: true });
+      await recipeToBeUpdated.save();
+      return res.json({recipeToBeUpdated});
+    }else{
+      return res.status(404).json({message: "recipe not found"});
+    }
+  }catch(err){
+    return res.json({message: err.message});
+  }
+})
+
+router.patch('/:recipeId',userAuth,async(req,res)=>{
+    try{
+      const id = req.params.recipeId;
+      const user = await User.findById(req.user.id);
+      if(user.recipes.includes(id)){
+        const recipeToBeUpdated = await Recipe.findById(id);
+        Object.assign(recipeToBeUpdated,req.body);
+        await recipeToBeUpdated.save();
+        return res.json({recipeToBeUpdated});
+      }else{
+        return res.status(404).json({message: "recipe not found"})
+      }
+    }
+    catch(err){
+      return res.json({message: err.message});
+    }
 })
   
-  module.exports = router;
+module.exports = router;
