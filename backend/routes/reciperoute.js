@@ -66,5 +66,24 @@ router.patch('/:recipeId',userAuth,async(req,res)=>{
       return res.json({message: err.message});
     }
 })
+
+router.delete('/:recipeId',userAuth, async(req,res)=>{
+  try{
+    const id = req.params.recipeId;
+    const user = await User.findById(req.user.id);
+    if(user.recipes.includes(id)){
+      const recipeToBeDeleted = Recipe.findById(id);
+      await recipeToBeDeleted.deleteOne();
+      user.recipes.pull(id);
+      await user.save();
+      return res.json({ message: 'Recipe deleted successfully' });
+    }else{
+      return res.status(404).json({message: "recipe not found"});
+    }
+  }
+  catch(err){
+    return res.json({message : err.message});
+  }
+})
   
 module.exports = router;
