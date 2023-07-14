@@ -22,6 +22,16 @@ router.post('/', userAuth, async (req, res) => {
   });
 
 router.get('/',userAuth,async(req,res)=>{
+  try{
+    const recipes = await Recipe.find({});
+    return res.json({recipes});
+  }
+  catch(err){
+    return res.json({message : err.message});
+  }
+})
+
+router.get('/userRecipes',userAuth,async(req,res)=>{
     try{
         const user = await User.findById(req.user.id).populate('recipes');
         if(user.recipes.length === 0){
