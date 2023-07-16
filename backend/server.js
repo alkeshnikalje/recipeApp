@@ -17,12 +17,12 @@ app.use('/users/recipes',recipeRouter);
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser : true,
     useUnifiedTopology : true
-})
+});
 
 const db = mongoose.connection;
 
 db.on('error',()=>{
-    console.log("Error conncections");
+    console.log("Error connections");
 })
 
 db.once('open',()=>{
