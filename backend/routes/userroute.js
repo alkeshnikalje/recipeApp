@@ -7,10 +7,10 @@ const userAuth = require('../authmiddleware');
 
 router.post('/signup', async (req,res)=>{
     try{
+        const {username,password} = req.body
         if(!username || !password){
             return res.status(400).json({message : "all fields in the request body are mandatory."});
         }
-        const {username,password} = req.body
         const user = await User.findOne({username});
         if(user){
             return res.status(403).json({message : "user already exists"});
@@ -27,10 +27,10 @@ router.post('/signup', async (req,res)=>{
 
 router.post('/login', async(req,res)=>{
     try{
+        const {username,password} = req.body;
         if(!username || !password){
             return res.status(400).json({message : "all fields in the request body are mandatory."});
         }
-        const {username,password} = req.body;
         const user = await User.findOne({username});
         if(!user){
             return res.sendStatus(401).json({message: "invalid password or username"});
